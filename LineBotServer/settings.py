@@ -122,7 +122,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 LINE_CHANNEL_ACCESS_TOKEN = 'Z0yEigJM9zTaaCkC3sf9xT59A3rCAR7tXphVG8PAHEK38d6mNO61l0wZZa4BhnRKAMhFcqorYhzHFGZDM44iIzeE9/stsJ+OsbMznQm4ckAbBiIYICGmft1FgxrXhZAv4q6Kymv4yo5+4KAavNRYXgdB04t89/1O/w1cDnyilFU='
 
