@@ -125,6 +125,7 @@ USE_TZ = True
 
 LINE_CHANNEL_ACCESS_TOKEN = env('LINE_CHANNEL_ACCESS_TOKEN')
 LINE_CHANNEL_SECRET = env('LINE_CHANNEL_SECRET')
+GOOGLE_SHEET_URL = env("GOOGLE_SHEET_URL")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

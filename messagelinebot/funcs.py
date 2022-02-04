@@ -19,7 +19,7 @@ def check_is_last_tuesday():
 def reverse_week_type(iscron=True):
     gc = pygsheets.authorize(
         service_account_file=fileName)
-    web_url = "https://docs.google.com/spreadsheets/d/1v0G4cp02Qq4zM7miulrqixL0tbR5v_yoASRdoTa5I9U"
+    web_url = settings.GOOGLE_SHEET_URL
     wb_url = gc.open_by_url(web_url)
     sh = wb_url.sheet1
     result_row = sh.get_row(2)
@@ -63,3 +63,7 @@ def get_week_type():
     sh = wb_url.sheet1
 
     return sh.cell("A2").value == "TRUE"
+
+
+def switch_training_subject():
+    reverse_week_type(True)

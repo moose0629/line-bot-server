@@ -16,10 +16,8 @@ line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 emoji_product = "5ac21a8c040ab15980c9b43f"
-emoji_num1 = "053"
-emoji_num2 = "054"
-emoji_num3 = "055"
-
+emoji_start = 53
+commands = ["指令", "週次", "變更", "跳過", "彩蛋"]
 
 def get_emoji(emoji_num: str, index: int):
     return {
@@ -28,16 +26,29 @@ def get_emoji(emoji_num: str, index: int):
         "emojiId": emoji_num
     }
 
+def get_commands():
+    result = ""
+    for idx, command in enumerate(commands):
+        result += "${}\n".format(command) if len(commands) - \
+            idx != 1 else "${}".format(command)
+    return result
+
+def get_commands_emojis():
+    result = []
+    index = 0
+    for idx, command in enumerate(commands):
+        result.append(get_emoji("{:0>3d}".format(emoji_start+idx), index))
+        index += (len(command)+2)
+    return result
 
 def handle_message_text(message_text: str):
+
+    commands.index(message_text)
+
     if message_text == "指令":
         return TextSendMessage(
-            text="$指令\n$週次\n$績效",
-            emojis=[
-                get_emoji(emoji_num1, 0),
-                get_emoji(emoji_num2, 4),
-                get_emoji(emoji_num3, 8)
-            ]
+            text=get_commands(),
+            emojis=get_commands_emojis()
         )
     elif message_text == "週次":
         if funcs.check_is_last_tuesday():
@@ -53,7 +64,7 @@ def handle_message_text(message_text: str):
         result = funcs.reverse_week_type(False)
         return TextSendMessage("已將這週夜訓變更為『{}』".format("徵員週" if result else "激勵週"))
     else:
-        return TextSendMessage(message_text)
+        return TextSendMessage("沒有這種東西 ヽ(́◕◞౪◟◕‵)ﾉ")
 
 
 @csrf_exempt
@@ -76,6 +87,13 @@ def callback(request):
             for event in events:
                 if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
                     user_key_in = event.message.text
+
+                    try:
+                        commands.index(user_key_in)
+                    except ValueError as e:
+                        logging.info('command: {} 不存在於系統中'.format(
+                            str(e)[::-1][15:][::-1]))
+                        return HttpResponse()
 
                     line_bot_api.reply_message(  # 回復傳入的訊息文字
                         event.reply_token,
