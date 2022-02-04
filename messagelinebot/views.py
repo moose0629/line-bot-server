@@ -1,5 +1,6 @@
 import json
 import calendar
+import logging
 from . import funcs
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
@@ -59,33 +60,37 @@ def handle_message_text(message_text: str):
 def callback(request):
     # print(json.dumps(request))
     print("hello line bot connected")
-    if request.method == 'POST':
-        signature = request.META['HTTP_X_LINE_SIGNATURE']
-        body = request.body.decode('utf-8')
 
-        try:
-            events = parser.parse(body, signature)  # 傳入的事件
-        except InvalidSignatureError:
-            return HttpResponseForbidden()
-        except LineBotApiError:
+    try:
+        if request.method == 'POST':
+            signature = request.META['HTTP_X_LINE_SIGNATURE']
+            body = request.body.decode('utf-8')
+
+            try:
+                events = parser.parse(body, signature)  # 傳入的事件
+            except InvalidSignatureError:
+                return HttpResponseForbidden()
+            except LineBotApiError:
+                return HttpResponseBadRequest()
+
+            for event in events:
+                if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
+                    user_key_in = event.message.text
+
+                    line_bot_api.reply_message(  # 回復傳入的訊息文字
+                        event.reply_token,
+                        handle_message_text(user_key_in)
+                    )
+                else:
+                    line_bot_api.reply_message(
+                        event.reply_token,
+                        TextSendMessage("請輸入文字")
+                    )
+            return HttpResponse()
+        else:
             return HttpResponseBadRequest()
-
-        for event in events:
-            if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
-                user_key_in = event.message.text
-
-                line_bot_api.reply_message(  # 回復傳入的訊息文字
-                    event.reply_token,
-                    handle_message_text(user_key_in)
-                )
-            else:
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage("請輸入文字")
-                )
-        return HttpResponse()
-    else:
-        return HttpResponseBadRequest()
+    except Exception as e:  # work on python 3.x
+        logging.error('Failed to upload to ftp: ' + str(e))
 
 
 @csrf_exempt
