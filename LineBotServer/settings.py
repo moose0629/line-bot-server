@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django_heroku
 
-django_heroku.settings(locals())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,3 +132,6 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 LINE_CHANNEL_ACCESS_TOKEN = 'Z0yEigJM9zTaaCkC3sf9xT59A3rCAR7tXphVG8PAHEK38d6mNO61l0wZZa4BhnRKAMhFcqorYhzHFGZDM44iIzeE9/stsJ+OsbMznQm4ckAbBiIYICGmft1FgxrXhZAv4q6Kymv4yo5+4KAavNRYXgdB04t89/1O/w1cDnyilFU='
 
 LINE_CHANNEL_SECRET = 'b11432f3201ab4543661a223029b9214'
+
+
+django_heroku.settings(locals())
