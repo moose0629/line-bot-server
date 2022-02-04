@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4v(2v3n8ht2#6+p04-vkr-4sp_oulj7!zank=$b0^t0yp+&!om'
+# SECRET_KEY = '4v(2v3n8ht2#6+p04-vkr-4sp_oulj7!zank=$b0^t0yp+&!om'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -128,10 +128,5 @@ STATIC_URL = '/static/'
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-
-LINE_CHANNEL_ACCESS_TOKEN = 'Z0yEigJM9zTaaCkC3sf9xT59A3rCAR7tXphVG8PAHEK38d6mNO61l0wZZa4BhnRKAMhFcqorYhzHFGZDM44iIzeE9/stsJ+OsbMznQm4ckAbBiIYICGmft1FgxrXhZAv4q6Kymv4yo5+4KAavNRYXgdB04t89/1O/w1cDnyilFU='
-
-LINE_CHANNEL_SECRET = 'b11432f3201ab4543661a223029b9214'
-
 
 django_heroku.settings(locals())
