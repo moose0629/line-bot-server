@@ -95,12 +95,7 @@ def callback(request):
                     line_bot_api.reply_message(  # 回復傳入的訊息文字
                         event.reply_token,
                         handle_message_text(user_key_in)
-                    )
-                else:
-                    line_bot_api.reply_message(
-                        event.reply_token,
-                        TextSendMessage("請輸入文字")
-                    )
+                    )                
             return HttpResponse()
         else:
             return HttpResponseBadRequest()
