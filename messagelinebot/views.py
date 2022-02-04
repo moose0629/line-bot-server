@@ -42,9 +42,6 @@ def get_commands_emojis():
     return result
 
 def handle_message_text(message_text: str):
-
-    commands.index(message_text)
-
     if message_text == "指令":
         return TextSendMessage(
             text=get_commands(),
