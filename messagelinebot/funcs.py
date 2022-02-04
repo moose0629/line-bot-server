@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
 import pygsheets
-import json
 import os
+from django.conf import settings
 
-fileDir = os.path.dirname(os.path.realpath('__file__'))
-fileName = os.path.join(fileDir, 'docs\\firstfirebase-f6e15-dcc94b5fa7ed.json')
-
+fileName = os.path.join(
+    settings.BASE_DIR, 'docs/firstfirebase-f6e15-dcc94b5fa7ed.json')
 # 檢查當日是否為週二，且為當月最後一週
 
 
