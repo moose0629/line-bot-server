@@ -88,7 +88,7 @@ def callback(request):
                     try:
                         (["彩蛋"] + commands).index(user_key_in)
                     except ValueError as e:
-                        logging.info('command: {} 不存在於系統中'.format(
+                        logging.error('command: {} 不存在於系統中'.format(
                             str(e)[::-1][15:][::-1]))
                         return HttpResponse()
 
