@@ -17,7 +17,7 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 emoji_product = "5ac21a8c040ab15980c9b43f"
 emoji_start = 53
-commands = ["指令", "週次", "變更", "跳過", "彩蛋"]
+commands = ["指令", "週次", "變更", "跳過"]
 
 def get_emoji(emoji_num: str, index: int):
     return {
@@ -89,7 +89,7 @@ def callback(request):
                     user_key_in = event.message.text
 
                     try:
-                        commands.index(user_key_in)
+                        (["彩蛋"] + commands).index(user_key_in)
                     except ValueError as e:
                         logging.info('command: {} 不存在於系統中'.format(
                             str(e)[::-1][15:][::-1]))
