@@ -49,17 +49,17 @@ def handle_message_text(message_text: str):
         )
     elif message_text == "週次":
         if funcs.check_is_last_tuesday():
-            return TextSendMessage("這週夜訓是『向心週』")
+            return TextSendMessage("這週夜訓是『同心週』")
         elif funcs.get_week_type():
             return TextSendMessage("這週夜訓是『徵員週』")
         else:
-            return TextSendMessage("這週夜訓是『激勵週』")
+            return TextSendMessage("這週夜訓是『業績週』")
     elif message_text == "跳過":
         funcs.pass_this_week()
         return TextSendMessage("已跳過這週夜訓")
     elif message_text == "變更":
         result = funcs.reverse_week_type(False)
-        return TextSendMessage("已將這週夜訓變更為『{}』".format("徵員週" if result else "激勵週"))
+        return TextSendMessage("已將這週夜訓變更為『{}』".format("徵員週" if result else "業績週"))
     else:
         return TextSendMessage("沒有這種東西 ヽ(́◕◞౪◟◕‵)ﾉ")
 
