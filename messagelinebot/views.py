@@ -19,12 +19,14 @@ emoji_product = "5ac21a8c040ab15980c9b43f"
 emoji_start = 53
 commands = ["指令", "週次", "變更", "跳過"]
 
+
 def get_emoji(emoji_num: str, index: int):
     return {
         "index": index,
         "productId": emoji_product,
         "emojiId": emoji_num
     }
+
 
 def get_commands():
     result = ""
@@ -33,6 +35,7 @@ def get_commands():
             idx != 1 else "${}".format(command)
     return result
 
+
 def get_commands_emojis():
     result = []
     index = 0
@@ -40,6 +43,7 @@ def get_commands_emojis():
         result.append(get_emoji("{:0>3d}".format(emoji_start+idx), index))
         index += (len(command)+2)
     return result
+
 
 def handle_message_text(message_text: str):
     if message_text == "指令":
@@ -51,7 +55,7 @@ def handle_message_text(message_text: str):
         if funcs.check_is_last_tuesday():
             return TextSendMessage("這週夜訓是『同心週』")
         elif funcs.get_week_type():
-            return TextSendMessage("這週夜訓是『徵員週』")
+            return TextSendMessage("這週夜訓是『增員週』")
         else:
             return TextSendMessage("這週夜訓是『業績週』")
     elif message_text == "跳過":
@@ -62,6 +66,24 @@ def handle_message_text(message_text: str):
         return TextSendMessage("已將這週夜訓變更為『{}』".format("徵員週" if result else "業績週"))
     else:
         return TextSendMessage("沒有這種東西 ヽ(́◕◞౪◟◕‵)ﾉ")
+
+
+def handle_message_event(event):
+    if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
+        user_key_in = event.message.text
+
+        try:
+            (["彩蛋"] + commands).index(user_key_in)
+        except ValueError as e:
+            logging.error('command: {} 不存在於系統中'.format(
+                str(e)[::-1][15:][::-1]))
+            return HttpResponse()
+
+        line_bot_api.reply_message(  # 回復傳入的訊息文字
+            event.reply_token,
+            handle_message_text(user_key_in)
+        )
+    return None
 
 
 @csrf_exempt
@@ -82,20 +104,7 @@ def callback(request):
                 return HttpResponseBadRequest()
 
             for event in events:
-                if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
-                    user_key_in = event.message.text
-
-                    try:
-                        (["彩蛋"] + commands).index(user_key_in)
-                    except ValueError as e:
-                        logging.error('command: {} 不存在於系統中'.format(
-                            str(e)[::-1][15:][::-1]))
-                        return HttpResponse()
-
-                    line_bot_api.reply_message(  # 回復傳入的訊息文字
-                        event.reply_token,
-                        handle_message_text(user_key_in)
-                    )                
+                handle_message_event(event)
             return HttpResponse()
         else:
             return HttpResponseBadRequest()

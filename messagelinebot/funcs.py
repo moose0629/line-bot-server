@@ -11,7 +11,7 @@ fileName = os.path.join(
 def check_is_last_tuesday():
     now = datetime.now()
     today_plus_7_day = now + timedelta(days=7)
-    return now.isoweekday == 2 and now.month != today_plus_7_day.month
+    return now.isoweekday() == 2 and now.month != today_plus_7_day.month
 
 # 調整夜訓的主題設定
 
