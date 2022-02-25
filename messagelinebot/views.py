@@ -18,6 +18,24 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 emoji_product = "5ac21a8c040ab15980c9b43f"
 emoji_start = 53
 commands = ["指令", "週次", "變更", "跳過"]
+command_list = [
+    {
+        "command": "指令：",
+        "description": "\n輸入 『指令』 可以顯示機器人可以接受的指令及指令介紹。"        
+    },
+    {
+        "command": "週次：",
+        "description": "\n輸入 『週次』 可以顯示該週夜訓的主題。"
+    },
+    {
+        "command": "變更：",
+        "description": "\n輸入 『變更』 可以將該週的主題做變換。\nex：增員>業績 or 業績>增員"
+    },
+    {
+        "command": "跳過：",
+        "description": "\n輸入 『跳過』 可以將該週主題保留至下週，若下週為同心週，則繼續遞延。"
+    },
+]
 
 
 def get_emoji(emoji_num: str, index: int):
@@ -30,18 +48,20 @@ def get_emoji(emoji_num: str, index: int):
 
 def get_commands():
     result = ""
-    for idx, command in enumerate(commands):
-        result += "${}\n".format(command) if len(commands) - \
-            idx != 1 else "${}".format(command)
+    for idx, obj in enumerate(command_list):
+        result += "${}{}\n".format(obj['command'],obj['description']) if len(command_list) - \
+            idx != 1 else "${}{}".format(obj['command'],obj['description'])
     return result
 
 
 def get_commands_emojis():
     result = []
+    splitarr = get_commands().split("$")
+    splitarr.pop(0)    
     index = 0
-    for idx, command in enumerate(commands):
+    for idx, split_str in enumerate(splitarr):
         result.append(get_emoji("{:0>3d}".format(emoji_start+idx), index))
-        index += (len(command)+2)
+        index += (len(split_str)+1)
     return result
 
 
@@ -67,23 +87,22 @@ def handle_message_text(message_text: str):
     else:
         return TextSendMessage("沒有這種東西 ヽ(́◕◞౪◟◕‵)ﾉ")
 
-
 def handle_message_event(event):
     if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
         user_key_in = event.message.text
 
         try:
             (["彩蛋"] + commands).index(user_key_in)
+
+            line_bot_api.reply_message(  # 回復傳入的訊息文字
+                event.reply_token,
+                handle_message_text(user_key_in)
+            )
+            return HttpResponse()
         except ValueError as e:
             logging.error('command: {} 不存在於系統中'.format(
                 str(e)[::-1][15:][::-1]))
             return HttpResponse()
-
-        line_bot_api.reply_message(  # 回復傳入的訊息文字
-            event.reply_token,
-            handle_message_text(user_key_in)
-        )
-    return None
 
 
 @csrf_exempt
