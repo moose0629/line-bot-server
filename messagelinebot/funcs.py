@@ -80,17 +80,23 @@ def get_update_result(input_text: str, row: list):
     employee = row[1]
     level = None
     history_records = json.loads(row[3])
+    modify_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if "reset" in input_text or "Reset" in input_text:
+        history_records["history"].append({
+            "editTime": modify_time,
+            "current": 254,
+            "input": "MDRT Reset",
+            "type": "Reset"
+        })
         return {
             "level": "三",
             "employee": employee,
             "updateValue": 254,
-            "historyRecords": '{"history":[]}'
+            "historyRecords": json.dumps(history_records)
         }
     else:
         update_value = 0
         history = None
-        modify_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if "+" in input_text:
             update_value = float(ori_value) - float(input_text[5:-1])
             history = {
