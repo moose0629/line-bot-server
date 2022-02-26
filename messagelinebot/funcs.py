@@ -151,8 +151,24 @@ def modify_performance(employee: str, input_text: str):
         sh.update_values('A{0}:D{0}'.format(row_index+1), [
             [data["level"], data["employee"], data["updateValue"], data["historyRecords"]]])
 
-        return "Dear.{} 已將您的MDRT紀錄刷新為{:3.2f}p，目前為階段{}，再接再厲！".format(employee, data["updateValue"], data["level"])
-    return "Dear.{} 你不在MDRT的挑戰參與者中，請連絡主管將你加入挑戰團隊！".format(employee)
+        return "Dear. {} 已將您的MDRT紀錄刷新為{:3.2f}p，目前為階段{}，再接再厲！".format(employee, data["updateValue"], data["level"])
+    return "Dear. {} 你不在MDRT的挑戰參與者中，請連絡主管將你加入挑戰團隊！".format(employee)
+
+
+def search_performance(employee: str):
+    gc = pygsheets.authorize(
+        service_account_file=fileName)
+    web_url = settings.GOOGLE_SHEET_URL
+    wb_url = gc.open_by_url(web_url)
+    sh = wb_url.worksheet("title", "MDRT")
+    row_index = get_employee_index_from_arr(employee, sh.get_col(2))
+
+    if row_index > -1:
+        row = sh.get_row(row_index)
+        level = row[0]
+        value = float(row[2])
+        return "Dear. {} 您的MDRT紀錄為{:3.2f}p，目前為階段{}，再接再厲！".format(employee, value, level)
+    return "Dear. {} 你不在MDRT的挑戰參與者中，請連絡主管將你加入挑戰團隊！".format(employee)
 
 
 def switch_training_subject():
