@@ -143,7 +143,13 @@ def handle_message_text(message_text: str):
 def handle_message_event(event):
     if isinstance(event, MessageEvent) and event.message.type == 'text':  # 如果有訊息事件
         user_key_in: str = event.message.text
-        profile = line_bot_api.get_profile(event.source.user_id)
+        profile = None
+        try:
+            profile = line_bot_api.get_group_member_profile(
+                event.source.group_id, event.source.user_id)
+        except LineBotApiError as e:
+            print("無法獲取該輸入者{}的個人資料".format(event.source.user_id))
+            return
         user_key_in = user_key_in.strip()
         try:
             (["彩蛋"] + commands).index(user_key_in)
