@@ -170,10 +170,11 @@ def search_performance(employee: str):
     row_index = get_employee_index_from_arr(employee, sh.get_col(2))
 
     if row_index > -1:
-        row = sh.get_row(row_index)
+        row = sh.get_row(row_index+1)
         level = row[0]
         value = float(row[2])
         return "Dear. {} 您的MDRT紀錄為{:3.2f}p，目前為階段{}，再接再厲！".format(employee, value, level)
+
     return "Dear. {} 你不在MDRT的挑戰參與者中，請連絡主管將你加入挑戰團隊！".format(employee)
 
 

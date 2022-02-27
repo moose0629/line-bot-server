@@ -162,10 +162,11 @@ def handle_message_event(event):
                 logging.error('command: {} 不存在於系統中'.format(
                     str(e)[::-1][15:][::-1]))
             elif search_result is not None:
+                result = funcs.search_performance(profile.display_name)
+
                 line_bot_api.reply_message(  # 回復傳入的訊息文字
                     event.reply_token,
-                    TextSendMessage(funcs.search_performance(
-                        profile.display_name))
+                    TextSendMessage(result)
                 )
             else:
                 line_bot_api.reply_message(  # 回復傳入的訊息文字
@@ -201,7 +202,7 @@ def callback(request):
         logging.error('Failed to upload to ftp: ' + str(e))
 
 
-@csrf_exempt
+@ csrf_exempt
 def test(request):
     print("test!!!")
     return HttpResponse("success")
