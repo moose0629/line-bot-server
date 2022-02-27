@@ -157,7 +157,10 @@ def modify_performance(employee: str, input_text: str):
         sh.update_values('A{0}:D{0}'.format(row_index+1), [
             [data["level"], data["employee"], data["updateValue"], data["historyRecords"]]])
 
-        return "Dear. {} 已將您的MDRT紀錄刷新為{:3.2f}p，目前為階段{}，再接再厲！".format(employee, data["updateValue"], data["level"])
+        if data["updateValue"] == 0:
+            return "Dear. {} 恭喜您已達成MDRT！先請所有骨頭吃個海底撈吧，不請說不過去吧？是吧！".format(employee)
+
+        return "Dear. {} 已將您的MDRT紀錄刷新，距離達成MDRT的目標還差{:3.2f}p，目前為階段{}，再接再厲！".format(employee, data["updateValue"], data["level"])
     return "Dear. {} 你不在MDRT的挑戰參與者中，請連絡主管將你加入挑戰團隊！".format(employee)
 
 
@@ -173,7 +176,11 @@ def search_performance(employee: str):
         row = sh.get_row(row_index+1)
         level = row[0]
         value = float(row[2])
-        return "Dear. {} 您的MDRT紀錄為{:3.2f}p，目前為階段{}，再接再厲！".format(employee, value, level)
+
+        if value == 0:
+            return "Dear. {} 恭喜您已達成MDRT！先請所有骨頭吃個海底撈吧，不請說不過去吧？是吧！".format(employee)
+
+        return "Dear. {} 您距離達成MDRT的目標還差{:3.2f}p，目前為階段{}，再接再厲！".format(employee, value, level)
 
     return "Dear. {} 你不在MDRT的挑戰參與者中，請連絡主管將你加入挑戰團隊！".format(employee)
 
